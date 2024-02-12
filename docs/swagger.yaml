@@ -1,0 +1,142 @@
+openapi: 3.0.3
+info:
+  title: Hackathon Built API
+  description: Nodejs backend to interact with list of machines
+
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:3000
+paths:
+  /getAllMachines:
+    get:
+      summary: Retrieves information on all machines in the database
+      operationId: getAllMachines
+      responses:
+        200:
+          description: Successfully retrieved all machines
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique identifier of the machine
+                      example: 1
+                    productNumber:
+                      type: string
+                      description: The product number of the machine
+                      example: "12345"
+                    description:
+                      type: string
+                      description: A description of the machine
+                      example: "A high performance industrial machine."
+        400:
+          description: Failed to retrieve machines due to a server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to retrieve machines"
+
+  /addMachine:
+    post:
+      summary: Adds a new machine to the database
+      operationId: addMachine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                productNumber:
+                  type: string
+                  description: The product number of the machine
+                  example: "MSM358G"
+                description:
+                  type: string
+                  description: A description of the machine
+                  example: "Superior in all its glory"
+      responses:
+        201:
+          description: Machine successfully added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Machine successfully added"
+        400:
+          description: Bad request if the required fields are not provided
+        500:
+          description: Internal server error when the machine cannot be added
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to add the machine"
+                    
+  /removeMachine:
+    post:
+      summary: Removes a machine from the database by ID
+      operationId: removeMachine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+              properties:
+                id:
+                  type: string
+                  description: The unique identifier of the machine to be removed
+                  example: "42"
+      responses:
+        200:
+          description: Machine removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Machine removed successfully"
+        400:
+          description: Bad request if the machine ID is not provided
+        404:
+          description: Machine not found if the ID does not exist in the database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Machine not found"
+        500:
+          description: Internal server error when the operation fails
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Failed to remove machine"
